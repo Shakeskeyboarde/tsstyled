@@ -192,12 +192,12 @@
 							</ol>
 						</li>
 						<li>The <a href="https://styled-components.com/docs/advanced#referring-to-other-components">component selector</a> pattern only works when a component is given an <em>explicit</em> display name, because making every component selectable adds transfer size to the SSR output, and requiring a name can mitigate some potential SSR vs client rendering order gotchas.</li>
+						<li>The API is similar enough to the styled-components API for the <a href="https://marketplace.visualstudio.com/items?itemName=jpoissonnier.vscode-styled-components">vscode-styled-components</a> plugin to provide syntax support.</li>
 						<li>No <a href="https://styled-components.com/docs/advanced#theming">theme</a> is automatically injected into styled component props, because custom themes can be manually injected by using a theme hook with the <code>use</code> method.</li>
 						<li>No <a href="https://styled-components.com/docs/basics#animations">keyframes</a> utility is included, because the <code>@keyframes</code> at-rule can be used in any styled template string, and the <code>getId</code> utility can be used if animation name collisions are a concern.</li>
 						<li>No <a href="https://styled-components.com/docs/api#createglobalstyle">createGlobalStyle</a> utility is included, because global styles can be created by calling <code>styled(&#39;style&#39;)</code> which produces a global style component.</li>
 				<li>No automatic vendor prefixing is performed, to keep library size and complexity down, and because it&#39;s <a href="http://shouldiprefix.com/">unnecessary</a> for most common styling scenarios.</details></li>
 				</ul>
-				<p>The <code>tsstyled</code> API is similar enough to the original API for the <code>vscode-styled-components</code> plugin to provide syntax support.</p>
 				<a href="#the-basics" id="the-basics" style="color: inherit; text-decoration: none;">
 					<h2>The Basics</h2>
 				</a>

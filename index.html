@@ -186,7 +186,7 @@
 						<li>The <a href="https://styled-components.com/docs/api#as-polymorphic-prop">as</a> polymorphic prop is not supported, because it does not fit the philosophy of this library.</li>
 						<li>The attributes passed through to simple HTML elements (eg. <code>div</code>) are not <a href="https://styled-components.com/docs/basics#passed-props">filtered based on known HTML attributes</a>, but instead are filtered based on the following rules:<ol>
 								<li>Props that start with <code>$</code> are <em>always</em> filtered out.</li>
-								<li>The <code>style</code> and <code>children</code> props are <em>never</em> filtered out.</li>
+								<li>The <code>style</code>, <code>children</code>, and <code>ref</code> props are <em>never</em> filtered out.</li>
 								<li>Function props are filtered out <em>unless</em> the prop name starts with <code>on</code>.</li>
 								<li>All other non-primitive (<code>string</code>, <code>number</code>, <code>boolean</code>) props are filtered out.</li>
 							</ol>

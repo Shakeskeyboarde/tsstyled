@@ -111,6 +111,11 @@
 							<li><a href="#themed-helpers">Themed helpers</a></li>
 						</ul>
 					</li>
+					<li><a href="#utilities">Utilities</a><ul>
+							<li><a href="#detecting-styled-components">Detecting styled components</a></li>
+							<li><a href="#building-a-class-name-string">Building a class name string</a></li>
+						</ul>
+					</li>
 					<li><a href="#server-side-rendering-ssr">Server Side Rendering (SSR)</a></li>
 					<li><a href="#ecosystem">Ecosystem</a><ul>
 							<li><a href="#websites">Websites</a></li>
@@ -616,6 +621,31 @@
 <span style="color: #CE9178">  color: red;</span>
 <span style="color: #CE9178">`</span><span style="color: #D4D4D4">;</span>
 </code></pre>
+				<a href="#utilities" id="utilities" style="color: inherit; text-decoration: none;">
+					<h2>Utilities</h2>
+				</a>
+				<a href="#detecting-styled-components" id="detecting-styled-components" style="color: inherit; text-decoration: none;">
+					<h3>Detecting styled components</h3>
+				</a>
+				<p>The <code>isStyled</code> and <code>isStyledSelector</code> functions can be used to detect components that have been styled. The <code>isStyled</code> method detects any styled component, while the <code>isStyledSelector</code> function only returns true for styled components that can be used as selectors.</p>
+				<pre><code class="language-tsx"><span style="color: #C586C0">import</span><span style="color: #D4D4D4"> { </span><span style="color: #9CDCFE">isStyled</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">isStyledSelector</span><span style="color: #D4D4D4"> } </span><span style="color: #C586C0">from</span><span style="color: #D4D4D4"> </span><span style="color: #CE9178">&#039;tsstyled&#039;</span><span style="color: #D4D4D4">;</span>
+
+<span style="color: #569CD6">const</span><span style="color: #D4D4D4"> </span><span style="color: #4FC1FF">StyledComp</span><span style="color: #D4D4D4"> = </span><span style="color: #DCDCAA">styled</span><span style="color: #D4D4D4">(</span><span style="color: #CE9178">&#039;div&#039;</span><span style="color: #D4D4D4">)</span><span style="color: #CE9178">``</span><span style="color: #D4D4D4">;</span>
+<span style="color: #569CD6">const</span><span style="color: #D4D4D4"> </span><span style="color: #4FC1FF">StyledCompAndSelector</span><span style="color: #D4D4D4"> = </span><span style="color: #DCDCAA">styled</span><span style="color: #D4D4D4">(</span><span style="color: #CE9178">&#039;div&#039;</span><span style="color: #D4D4D4">, </span><span style="color: #CE9178">&#039;DisplayName&#039;</span><span style="color: #D4D4D4">)</span><span style="color: #CE9178">``</span><span style="color: #D4D4D4">;</span>
+
+<span style="color: #DCDCAA">isStyled</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">StyledComp</span><span style="color: #D4D4D4">); </span><span style="color: #6A9955">// true</span>
+<span style="color: #DCDCAA">isStyled</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">StyledCompAndSelector</span><span style="color: #D4D4D4">); </span><span style="color: #6A9955">// true</span>
+<span style="color: #DCDCAA">isStyledSelector</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">StyledComp</span><span style="color: #D4D4D4">); </span><span style="color: #6A9955">// false</span>
+<span style="color: #DCDCAA">isStyledSelector</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">StyledCompAndSelector</span><span style="color: #D4D4D4">); </span><span style="color: #6A9955">// true</span>
+</code></pre>
+				<a href="#building-a-class-name-string" id="building-a-class-name-string" style="color: inherit; text-decoration: none;">
+					<h3>Building a class name string</h3>
+				</a>
+				<p>Joining multiple class names into a single string is a common problem. The <code>classNames</code> function takes possibly falsy class names, or maps of class names, and returns a clean class names string.</p>
+				<pre><code class="language-tsx"><span style="color: #C586C0">import</span><span style="color: #D4D4D4"> { </span><span style="color: #9CDCFE">isStyled</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">isStyledSelector</span><span style="color: #D4D4D4"> } </span><span style="color: #C586C0">from</span><span style="color: #D4D4D4"> </span><span style="color: #CE9178">&#039;tsstyled&#039;</span><span style="color: #D4D4D4">;</span>
+
+<span style="color: #569CD6">const</span><span style="color: #D4D4D4"> </span><span style="color: #4FC1FF">className</span><span style="color: #D4D4D4"> = </span><span style="color: #DCDCAA">classNames</span><span style="color: #D4D4D4">(</span><span style="color: #CE9178">&#039;a&#039;</span><span style="color: #D4D4D4">, { </span><span style="color: #9CDCFE">b:</span><span style="color: #D4D4D4"> </span><span style="color: #569CD6">true</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">c:</span><span style="color: #D4D4D4"> </span><span style="color: #569CD6">false</span><span style="color: #D4D4D4"> }, </span><span style="color: #569CD6">null</span><span style="color: #D4D4D4">); </span><span style="color: #6A9955">// &quot;a b&quot;</span>
+</code></pre>
 				<a href="#server-side-rendering-ssr" id="server-side-rendering-ssr" style="color: inherit; text-decoration: none;">
 					<h2>Server Side Rendering (SSR)</h2>
 				</a>
@@ -731,6 +761,9 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#styleconfig" class="tsd-kind-icon">Style<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#classnames" class="tsd-kind-icon">class<wbr>Names</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#createtheme" class="tsd-kind-icon">create<wbr>Theme</a>

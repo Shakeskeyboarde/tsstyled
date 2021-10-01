@@ -88,8 +88,16 @@
 <a href="#motivation" id="motivation" style="color: inherit; text-decoration: none;">
   <h2>Motivation</h2>
 </a>
-<p>I wanted a small CSS-in-JS solution for React, with zero dependencies, and strong types. I love the styled-components pattern, but Styled Components itself is too big and it&#39;s typings are <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/issues?q=is%3Aissue+is%3Aopen+styled-components">not the best</a>. Emotion is smaller and generally better, but still not ideal. Then I found <a href="https://npmjs.com/package/goober">Goober</a> which nearly convincing me not to write this library. If you&#39;re looking for a good solution, check it out too.</p>
-<p>I still wrote this because it was just a fun side project, and because there were some different design choices I wanted to make. I&#39;ve included a comparison of what I consider to be the key features of any CSS-in-JS library.</p>
+<p>I want a CSS-in-JS solution for React+TypeScript that meets the following requirements.</p>
+<ul>
+<li>Strong types, without compromise for &quot;convenience&quot; features that don&#39;t belong in a style system.</li>
+<li>Multiple instances can be used side-by-side without conflict (ie. component libraries).</li>
+<li>Small and with zero dependencies to minimize bundling cost and risk.</li>
+<li>Simple and opinionated API, which provides a single &quot;correct&quot; path to a goal.</li>
+<li>Full and future-proof support for all CSS features.</li>
+</ul>
+<p>I love the styled components pattern, but Styled Components itself is too big and it&#39;s typings are <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/issues?q=is%3Aissue+is%3Aopen+styled-components">not the best</a>. Emotion is smaller and generally better, but still not ideal. Then I found <a href="https://npmjs.com/package/goober">Goober</a> which nearly convincing me not to write this library. If you&#39;re looking for a good solution, check it out too.</p>
+<p>I still wrote this because there were some different design choices I wanted to make (even from Goober). I&#39;ve included a comparison of what I consider to be the key features of any CSS-in-JS library. But, it boils down to a <em>reduced</em> feature set, focused on type safety and encapsulation.</p>
 
 <a href="#compared-with-other-libraries" id="compared-with-other-libraries" style="color: inherit; text-decoration: none;">
   <h3>Compared with other libraries</h3>
@@ -211,7 +219,7 @@
 <td></td>
 <td>Theming [1]</td>
 <td>🟢</td>
-<td>🟢</td>
+<td>🟡</td>
 <td>🟡</td>
 <td>🟡</td>
 </tr>
@@ -322,8 +330,8 @@
 </tbody></table>
 <p>&nbsp;</p>
 <ul>
-<li>[1] Styled Components and Emotion support only a single theme, which must be typed using declaration merging.</li>
-<li>[2] Goober allows a prefix callback function to be configured, but does not provide automatic vendor prefixing.</li>
+<li>[1] Goober, Styled Components, and Emotion, all support only a single theme, which must be typed using declaration merging.</li>
+<li>[2] Goober provides vendor prefixing as an additional package.</li>
 <li>[3] Goober doesn&#39;t provide a <code>css</code> utility for creating mixins, but it does support function values in tagged templates.</li>
 </ul>
 <p>TSStyled omits three key features supported by other libraries: Polymorphism using the <code>as</code> property, vendor prefixing, and object styles.</p>

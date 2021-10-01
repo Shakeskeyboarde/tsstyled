@@ -7,7 +7,7 @@
 <p>A small, fast, and simple CSS-in-JS solution for React.</p>
 <ul>
 <li><strong>Small</strong>: Less than 4kb (minified and gzipped) and no dependencies.</li>
-<li><strong>Fast</strong>: Faster than styled-components (benchmarks included).</li>
+<li><strong>Fast</strong>: Faster than styled-components (<a href="https://tsstyled.com/benchmark/">benchmarks</a> included).</li>
 <li><strong>Simple</strong>: A minimal and intuitive API.</li>
 <li><strong>Typed</strong>: Written in TypeScript with a focus on type safety and clarity.</li>
 </ul>
@@ -90,7 +90,7 @@
 </a>
 <p>I want a CSS-in-JS solution for React+TypeScript that meets the following requirements.</p>
 <ul>
-<li>Strong types, without compromise for &quot;convenience&quot; features that don&#39;t belong in a style system.</li>
+<li>Strong types, without compromise for &quot;convenience&quot; features that are out-of-scope for a style system.</li>
 <li>Multiple instances can be used side-by-side without conflict (ie. component libraries).</li>
 <li>Small and with zero dependencies to minimize bundling cost and risk.</li>
 <li>Simple and opinionated API, which provides a single &quot;correct&quot; path to a goal.</li>
@@ -336,7 +336,7 @@
 </ul>
 <p>TSStyled omits three key features supported by other libraries: Polymorphism using the <code>as</code> property, vendor prefixing, and object styles.</p>
 <p>The automatic inclusion of the <code>as</code> property with support for any element or component, is inherently type unsafe. Full (non-styled) components can implement an <code>as</code> property and polymorphism safely, because they can limit the range of polymorphism. Strong typing is a key TSStyled goal, so this feature just doesn&#39;t fit.</p>
-<p>Vendor prefixing <a href="https://css-tricks.com/is-vendor-prefixing-dead/">isn&#39;t as necessary as it used to be</a>. There are still a some uncommon cases where it might be needed, but prefixes can always be manually included. Style helpers are also a pretty good fit for this. The overhead and maintenance required to implement this didn&#39;t seem worth it.</p>
+<p>Vendor prefixing <a href="https://css-tricks.com/is-vendor-prefixing-dead/">isn&#39;t as necessary as it used to be</a>. There are still a some uncommon cases where it might be needed, but prefixes can always be manually included. Style mixins are also a pretty good fit for this. The overhead and maintenance required to implement this didn&#39;t seem worth it.</p>
 <p>Omitting object styling is a purely stylistic choice. In my opinion, tagged templates provide a better experience in the following ways...</p>
 <ul>
 <li>Cutting and pasting styles is simpler with tagged templates.</li>
@@ -356,6 +356,9 @@
 </a>
 <p>First, create the styled API.</p>
 <pre><code class="language-tsx"><span class="hl-11">import</span><span class="hl-1"> { </span><span class="hl-6">createStyled</span><span class="hl-1"> } </span><span class="hl-11">from</span><span class="hl-1"> </span><span class="hl-4">&#39;tsstyled&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">();</span>
+</code></pre>
+<p>Pass in a theme hook/factory function in to create a <a href="#theming">themed</a> instance.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">(</span><span class="hl-6">useTheme</span><span class="hl-1">);</span>
 </code></pre>
 
 <a href="#styling-html-elements-and-components" id="styling-html-elements-and-components" style="color: inherit; text-decoration: none;">

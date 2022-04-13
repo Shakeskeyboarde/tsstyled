@@ -448,7 +448,7 @@
 <a href="#using-empty-values" id="using-empty-values" style="color: inherit; text-decoration: none;">
   <h3>Using empty values</h3>
 </a>
-<p>If a CSS property value is an empty string or null-ish (<code>null</code> or <code>undefined</code>), then the whole property will be omitted from the style.</p>
+<p>If a CSS property value is &quot;empty&quot; (empty string, <code>false</code>, <code>null</code> or <code>undefined</code>), then the whole property will be omitted from the style.</p>
 <pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: </span><span class="hl-0">${</span><span class="hl-0">null</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  background-color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
 </code></pre>
 <p>The color property is not included because it has no value.</p>

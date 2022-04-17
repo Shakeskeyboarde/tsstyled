@@ -17,19 +17,10 @@
 </ul>
 <hr>
 <ul>
+<li><a href="#goals">Goals</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
-<li><a href="#goals">Goals</a><ul>
-<li><a href="#non-goals">Non-goals</a></li>
-</ul>
-</li>
-<li><a href="#comparison">Comparison</a><ul>
-<li><a href="#benchmarks">Benchmarks</a></li>
-</ul>
-</li>
-<li><a href="#the-basics">The Basics</a><ul>
-<li><a href="#styling-html-elements-and-components">Styling HTML elements and components</a></li>
-<li><a href="#adding-style-properties">Adding style properties</a></li>
-<li><a href="#creating-global-styles">Creating global styles</a></li>
+<li><a href="#style-properties">Style properties</a></li>
+<li><a href="#global-styles">Global styles</a><ul>
 <li><a href="#defining-keyframes-and-fonts">Defining keyframes and fonts</a></li>
 </ul>
 </li>
@@ -56,16 +47,12 @@
 </li>
 <li><a href="#server-side-rendering-ssr">Server Side Rendering (SSR)</a></li>
 <li><a href="#testing">Testing</a></li>
+<li><a href="#comparison">Comparison</a><ul>
+<li><a href="#benchmarks">Benchmarks</a></li>
+</ul>
+</li>
 </ul>
 <hr>
-
-<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
-  <h2>Getting Started</h2>
-</a>
-<p>Install the <code>tsstyled</code> package and its <code>react</code> peer dependency.</p>
-<pre><code class="language-sh"><span class="hl-1">npm add tsstyled react</span><br/><span class="hl-1">yarn add tsstyled react</span>
-</code></pre>
-<p>This library uses semantic versioning. Breaking changes will only be introduced in major version updates.</p>
 
 <a href="#goals" id="goals" style="color: inherit; text-decoration: none;">
   <h2>Goals</h2>
@@ -83,10 +70,7 @@
 </ul>
 </li>
 </ul>
-
-<a href="#non-goals" id="non-goals" style="color: inherit; text-decoration: none;">
-  <h3>Non-goals</h3>
-</a>
+<p>There are also some things that are non-goals. They were considered, and then the choice was made to explicitly not include support for them.</p>
 <ul>
 <li>No auto vendor prefixing</li>
 <li>No object styles</li>
@@ -94,6 +78,181 @@
 <li>No &quot;non-style&quot; features (eg. <code>.attrs()</code> method)</li>
 <li>No React Native support</li>
 </ul>
+
+<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Getting Started</h2>
+</a>
+<p>Install the <code>tsstyled</code> package and its <code>react</code> peer dependency.</p>
+<pre><code class="language-sh"><span class="hl-1">npm add tsstyled react</span><br/><span class="hl-1">yarn add tsstyled react</span>
+</code></pre>
+<p>Create the styled API. Usually this is done only once per package.</p>
+<pre><code class="language-tsx"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-4">createStyled</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-5">&#39;tsstyled&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">();</span>
+</code></pre>
+<p>Style any HTML element type by using the tag name. The styled component supports all of the same props (included refs, which are forwarded) that the HTML element supports. Styling basic HTML elements is what you should be doing most of the time.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: black;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>Style any React component which accepts a <code>className</code> property. This comes with more tech debt than styling HTML elements, because you can&#39;t be sure how the style class is being applied inside the component. This should be done rarely and with careful consideration.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-4">Component</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: black;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>Extend the styling of an already styled component. Just like you want to keep your CSS specificity as low as possible, you also want to avoid trying to &quot;patch&quot; an already styled component. Styles can be dynamic, which means applying overrides can quickly get complicated. This should be an absolute last resort.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">ReStyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-4">StyledComponent</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: gray;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#style-properties" id="style-properties" style="color: inherit; text-decoration: none;">
+  <h2>Style properties</h2>
+</a>
+<p>You can add extra properties to the styled component by setting the generic parameter of the template string. Generally, you should prefix style properties with <code>$</code> to indicate that they are only used for styling. Any property name which starts with the <code>$</code> character will not be passed through to the underlying HTML element as an attribute.</p>
+<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">ComponentStyleProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">$font</span><span class="hl-1">?: </span><span class="hl-7">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">&lt;</span><span class="hl-7">ComponentStyleProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  font-family: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">$font</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#global-styles" id="global-styles" style="color: inherit; text-decoration: none;">
+  <h2>global styles</h2>
+</a>
+<p>Use the <code>styled.global</code> utility to create global style components.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">`</span><br/><span class="hl-5">  body,</span><br/><span class="hl-5">  html {</span><br/><span class="hl-5">    margin: 0;</span><br/><span class="hl-5">    padding: 0;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>You can add style properties to global styles too.</p>
+<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">GlobalStyleProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">$font</span><span class="hl-1">?: </span><span class="hl-7">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">&lt;</span><span class="hl-7">GlobalStyleProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  body,</span><br/><span class="hl-5">  html {</span><br/><span class="hl-5">    font-family: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">$font</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#defining-keyframes-and-fonts" id="defining-keyframes-and-fonts" style="color: inherit; text-decoration: none;">
+  <h3>Defining keyframes and fonts</h3>
+</a>
+<p>Defining keyframes or font-faces is the same as defining any other style. Since they are not scoped to any particular component, they should probably only be used in global styles. To prevent name collisions, use the included <code>getId</code> utility to generate CSS-safe unique names.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">openSansFont</span><span class="hl-1"> = </span><span class="hl-3">getId</span><span class="hl-1">(</span><span class="hl-5">&#39;Open Sans&#39;</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">slideInAnimation</span><span class="hl-1"> = </span><span class="hl-3">getId</span><span class="hl-1">(</span><span class="hl-5">&#39;slideIn&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">`</span><br/><span class="hl-5">  @font-face {</span><br/><span class="hl-5">    font-family: </span><span class="hl-0">${</span><span class="hl-4">openSansFont</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">    src: url(&#39;/fonts/OpenSans-Regular-webfont.woff&#39;) format(&#39;woff&#39;);</span><br/><span class="hl-5">  }</span><br/><br/><span class="hl-5">  @keyframes </span><span class="hl-0">${</span><span class="hl-4">slideInAnimation</span><span class="hl-0">}</span><span class="hl-5"> {</span><br/><span class="hl-5">    from {</span><br/><span class="hl-5">      transform: translateX(0%);</span><br/><span class="hl-5">    }</span><br/><br/><span class="hl-5">    to {</span><br/><span class="hl-5">      transform: translateX(100%);</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  font-family: </span><span class="hl-0">${</span><span class="hl-4">openSansFont</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  animation-name: </span><span class="hl-0">${</span><span class="hl-4">slideInAnimation</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#theming" id="theming" style="color: inherit; text-decoration: none;">
+  <h2>Theming</h2>
+</a>
+<p>A theme factory is provided instead of a single built-in theme. This allows themes to be strongly typed without relying on Typescript declaration merging (which does not provide great type-safety).</p>
+
+<a href="#creating-a-theme" id="creating-a-theme" style="color: inherit; text-decoration: none;">
+  <h3>Creating a theme</h3>
+</a>
+<p>A theme is essentially a context which provides theme constants. The <code>createReactTheme</code> utility makes it easy to create that kind of context, returning a hook for theme access, and a provider for theme overriding.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> [</span><span class="hl-2">useTheme</span><span class="hl-1">, </span><span class="hl-2">ThemeProvider</span><span class="hl-1">] = </span><span class="hl-3">createReactTheme</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">fgColor:</span><span class="hl-1"> </span><span class="hl-5">&#39;black&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-4">bgColor</span><span class="hl-1">: </span><span class="hl-5">&#39;white&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p><strong>Note</strong>: The <code>createReactTheme</code> helper is only for convenience. <em>Any</em> hook could potentially be used, including theme hooks from other libraries.</p>
+
+<a href="#using-a-theme" id="using-a-theme" style="color: inherit; text-decoration: none;">
+  <h3>Using a theme</h3>
+</a>
+<p>Pass the a hook (or any function) which returns a theme value to the <code>createStyled</code> function. The theme value will then be available as the second argument passed to any styled template string functional value.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">(</span><span class="hl-4">useTheme</span><span class="hl-1">);</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">ThemedComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">, </span><span class="hl-4">theme</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">theme</span><span class="hl-8">.</span><span class="hl-4">fgColor</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  background-color: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">, </span><span class="hl-4">theme</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">theme</span><span class="hl-8">.</span><span class="hl-4">bgColor</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#style-syntax" id="style-syntax" style="color: inherit; text-decoration: none;">
+  <h2>Style syntax</h2>
+</a>
+<p>Style syntax is CSS-like, and all CSS properties, selectors, and at-rules are supported. In addition, SCSS-like nesting is supported with parent selector references (<code>&amp;</code>).</p>
+
+<a href="#styling-self" id="styling-self" style="color: inherit; text-decoration: none;">
+  <h3>Styling self</h3>
+</a>
+<p>To apply styles directly to the HTML element or component being styled, use CSS properties at the top-level of the tagged template (no surrounding block).</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>Top-level CSS properties will be wrapped in a dynamic styled class selector</p>
+<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#styling-children" id="styling-children" style="color: inherit; text-decoration: none;">
+  <h3>Styling children</h3>
+</a>
+<p>Use CSS rule blocks to style children of the styled component.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    color: blue;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>The styled dynamic class will be automatically prepended to all selectors to make them &quot;scoped&quot;.</p>
+<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#styling-other-styled-components" id="styling-other-styled-components" style="color: inherit; text-decoration: none;">
+  <h3>Styling other styled components</h3>
+</a>
+<p>Every styled component (except global styles) can be used as a selector for that specific styled component.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponentA</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: blue;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponentB</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">StyledComponentA</span><span class="hl-0">}</span><span class="hl-5"> {</span><br/><span class="hl-5">    background-color: yellow;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>The styled component&#39;s <code>toString()</code> method returns a unique selector string (eg. <code>&quot;.tss_s7y13d&quot;</code>) which matches that specific styled component.</p>
+<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.tss_s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#nesting-rules" id="nesting-rules" style="color: inherit; text-decoration: none;">
+  <h3>Nesting rules</h3>
+</a>
+<p>Nest rule blocks to create more complex selectors.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    color: blue;</span><br/><br/><span class="hl-5">    .grandchild {</span><br/><span class="hl-5">      color: green;</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>Just like the styled dynamic class is prepended to top-level selectors, so too are parent selectors prepended to child selectors.</p>
+<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">green</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#using-parent-selector-references" id="using-parent-selector-references" style="color: inherit; text-decoration: none;">
+  <h3>Using parent selector references</h3>
+</a>
+<p>Parent selector references (<code>&amp;</code>) work the same way they do in SCSS/SASS. The one extra detail is that when a parent selector is used at the style root (not nested inside a parent block), it refers to the unique style class of the current style, which is the implicit/virtual parent block selector for the style.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  &amp;&amp; {</span><br/><span class="hl-5">    color: red;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  &amp;:hover {</span><br/><span class="hl-5">    color: blue;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  .parent &amp; {</span><br/><span class="hl-5">    color: green;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#using-at-rules" id="using-at-rules" style="color: inherit; text-decoration: none;">
+  <h3>Using at-rules</h3>
+</a>
+<p>All CSS at-rules are supported (except <code>@charset</code> which isn&#39;t allowed inside <code>&lt;style&gt;</code> elements).</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  @media screen and (min-width: 900px) {</span><br/><span class="hl-5">    color: red;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    @media screen and (min-width: 600px) {</span><br/><span class="hl-5">      .grandchild {</span><br/><span class="hl-5">        color: blue;</span><br/><span class="hl-5">        .adopted &amp; {</span><br/><span class="hl-5">          color: green;</span><br/><span class="hl-5">        }</span><br/><span class="hl-5">      }</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>At-rules will be hoisted as necessary, and parent selectors will be handled the same way they would be without the intervening at-rule.</p>
+<pre><code class="language-css"><span class="hl-6">@media</span><span class="hl-1"> </span><span class="hl-11">screen</span><span class="hl-1"> and (</span><span class="hl-10">min-width</span><span class="hl-1">: </span><span class="hl-12">900px</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><span class="hl-6">@media</span><span class="hl-1"> </span><span class="hl-11">screen</span><span class="hl-1"> and (</span><span class="hl-10">min-width</span><span class="hl-1">: </span><span class="hl-12">600px</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-9">.adopted</span><span class="hl-1"> </span><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">green</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#using-empty-values" id="using-empty-values" style="color: inherit; text-decoration: none;">
+  <h3>Using empty values</h3>
+</a>
+<p>If a CSS property value is &quot;empty&quot; (empty string, <code>false</code>, <code>null</code> or <code>undefined</code>), then the whole property will be omitted from the style.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: </span><span class="hl-0">${</span><span class="hl-0">null</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  background-color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+<p>The color property is not included because it has no value.</p>
+<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">background-color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#commenting" id="commenting" style="color: inherit; text-decoration: none;">
+  <h3>Commenting</h3>
+</a>
+<p>Styles can contain both block (<code>/* */</code>) and line comments (<code>//</code>). Comments are never included in rendered stylesheets.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  // This is a comment.</span><br/><span class="hl-5">  /* And so...</span><br/><span class="hl-5">     ...is this. */</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#style-mixins-helpers" id="style-mixins-helpers" style="color: inherit; text-decoration: none;">
+  <h2>Style mixins (helpers)</h2>
+</a>
+<p>The <code>styled.mixin</code> tagged template utility returns a mixin (AKA: helper) function. When the returned function is called, it returns a style string with all values interpolated.</p>
+
+<a href="#creating-simple-mixins" id="creating-simple-mixins" style="color: inherit; text-decoration: none;">
+  <h3>Creating simple mixins</h3>
+</a>
+<p>Mixins do not accept any parameters by default.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">fontMixin</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">mixin</span><span class="hl-5">`</span><br/><span class="hl-5">  font-family: Arial, sans-serif;</span><br/><span class="hl-5">  font-weight: 400;</span><br/><span class="hl-5">  font-size: 1rem;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">fontMixin</span><span class="hl-0">}</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#creating-parametric-mixins" id="creating-parametric-mixins" style="color: inherit; text-decoration: none;">
+  <h3>Creating parametric mixins</h3>
+</a>
+<p>Helpers which accept parameters can be created by setting the generic parameter of the <code>styled.mixin</code> template string.</p>
+<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">FontMixinProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">scale</span><span class="hl-1">?: </span><span class="hl-7">number</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">fontMixin</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">mixin</span><span class="hl-5">&lt;</span><span class="hl-7">FontMixinProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  font-family: Arial, sans-serif;</span><br/><span class="hl-5">  font-weight: 400;</span><br/><span class="hl-5">  font-size: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">scale</span><span class="hl-8"> </span><span class="hl-1">||</span><span class="hl-8"> </span><span class="hl-12">1</span><span class="hl-0">}</span><span class="hl-5">rem;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-3">fontMixin</span><span class="hl-8">({ </span><span class="hl-4">scale:</span><span class="hl-8"> </span><span class="hl-12">2</span><span class="hl-8"> })</span><span class="hl-0">}</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#server-side-rendering-ssr" id="server-side-rendering-ssr" style="color: inherit; text-decoration: none;">
+  <h2>Server Side Rendering (SSR)</h2>
+</a>
+<p>During SSR, there is no DOM and therefore no <code>document</code> global. TSStyled detects this and uses a very minimal &quot;virtual&quot; DOM behind the scenes. So, after rendering the document body, use the <code>renderStylesToString</code> utility to get all of the <code>&lt;style&gt;</code> elements (generated by TSStyled components) as an HTML string.</p>
+<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">appHtml</span><span class="hl-1"> = </span><span class="hl-3">renderToString</span><span class="hl-1">(</span><span class="hl-13">&lt;</span><span class="hl-7">App</span><span class="hl-1"> </span><span class="hl-13">/&gt;</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">stylesHtml</span><span class="hl-1"> = </span><span class="hl-3">renderStylesToString</span><span class="hl-1">();</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">html</span><span class="hl-1"> = </span><span class="hl-5">`</span><br/><span class="hl-5">&lt;!doctype HTML&gt;</span><br/><span class="hl-5">&lt;html&gt;</span><br/><span class="hl-5">&lt;head&gt;</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">stylesHtml</span><span class="hl-0">}</span><br/><span class="hl-5">&lt;/head&gt;</span><br/><span class="hl-5">&lt;body&gt;</span><br/><span class="hl-5">  &lt;div id=&quot;root&quot;&gt;</span><span class="hl-0">${</span><span class="hl-4">appHtml</span><span class="hl-0">}</span><span class="hl-5">&lt;/div&gt;</span><br/><span class="hl-5">&lt;/body&gt;</span><br/><span class="hl-5">&lt;/html&gt;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#testing" id="testing" style="color: inherit; text-decoration: none;">
+  <h2>Testing</h2>
+</a>
+<p>During testing, there may be a DOM (eg. jsdom) and a <code>document</code> global. However, the <code>NODE_ENV</code> environment variable should also be set to <code>test</code> (Jest sets this automatically). If it is, the SSR implementation is used. So, you can use the same <code>renderStylesToString</code> utility to test (eg. Jest snapshots) your styles.</p>
+<pre><code class="language-tsx"><span class="hl-3">expect</span><span class="hl-1">(</span><span class="hl-3">renderStylesToString</span><span class="hl-1">()).</span><span class="hl-3">toMatchSnapshot</span><span class="hl-1">();</span>
+</code></pre>
 
 <a href="#comparison" id="comparison" style="color: inherit; text-decoration: none;">
   <h2>Comparison</h2>
@@ -312,186 +471,4 @@
   <h3>Benchmarks</h3>
 </a>
 <p>The benchmark app is available <a href="https://tsstyled.com/benchmark/">online</a>, or by cloning the <a href="https://github.com/Shakeskeyboarde/tsstyled">TSStyled repository</a> and running the <code>npm start</code> command.</p>
-
-<a href="#the-basics" id="the-basics" style="color: inherit; text-decoration: none;">
-  <h2>The Basics</h2>
-</a>
-<p>First, create the styled API.</p>
-<pre><code class="language-tsx"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-4">createStyled</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-5">&#39;tsstyled&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">();</span>
-</code></pre>
-<p>Optionally, pass in a theme hook (or simple factory) function to create a <a href="#theming">themed</a> instance.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">(</span><span class="hl-4">useTheme</span><span class="hl-1">);</span>
-</code></pre>
-
-<a href="#styling-html-elements-and-components" id="styling-html-elements-and-components" style="color: inherit; text-decoration: none;">
-  <h3>Styling HTML elements and components</h3>
-</a>
-<p>Style any HTML element type by using the tag name. The styled component supports all of the same props (included refs, which are forwarded) that the HTML element supports.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: black;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>Style any React component which accepts a <code>className</code> string property.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-4">Component</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: black;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>Extend the styling of an already styled component.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">ReStyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-4">StyledComponent</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: gray;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>Most of the time, you will be styling plain HTML elements. In fact, that is the recommended pattern. These are what&#39;s known as &quot;style primitives&quot; and making them the lowest level component in your project will significantly reduce your tech debt.</p>
-<p>Sometimes, you&#39;ll need to style a React component which accepts a <code>className</code>. This comes with more tech debt, because you can&#39;t be sure what the style class is being applied to inside the component. It&#39;s supported, because it&#39;s definitely a necessary evil sometimes. But, style primitives are better.</p>
-<p>You might also need to re-style a previously styled component. This should be a last resort. Just like you want to keep your CSS specificity as low as possible, you also want to avoid trying to &quot;patch&quot; an already styled component. Styles can be dynamic, which means applying overrides can quickly get complicated. It <em>has</em> to be supported, because someone will use <code>styled</code> on an already styled component (no way to prevent it), and without explicit support the style precedence is guaranteed to cause a problem.</p>
-
-<a href="#adding-style-properties" id="adding-style-properties" style="color: inherit; text-decoration: none;">
-  <h3>Adding style properties</h3>
-</a>
-<p>You can add extra properties to the styled component by setting the generic parameter of the template string. Generally, you should prefix style properties with <code>$</code> to indicate that they are only used for styling. Any property name which starts with the <code>$</code> character will not be passed through to the underlying HTML element as an attribute.</p>
-<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">ComponentStyleProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">$font</span><span class="hl-1">?: </span><span class="hl-7">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">&lt;</span><span class="hl-7">ComponentStyleProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  font-family: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">$font</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#creating-global-styles" id="creating-global-styles" style="color: inherit; text-decoration: none;">
-  <h3>Creating global styles</h3>
-</a>
-<p>Use the <code>styled.global</code> utility to create global style components.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">`</span><br/><span class="hl-5">  body,</span><br/><span class="hl-5">  html {</span><br/><span class="hl-5">    margin: 0;</span><br/><span class="hl-5">    padding: 0;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>You can add style properties to global styles too.</p>
-<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">GlobalStyleProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">$font</span><span class="hl-1">?: </span><span class="hl-7">string</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">&lt;</span><span class="hl-7">GlobalStyleProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  body,</span><br/><span class="hl-5">  html {</span><br/><span class="hl-5">    font-family: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">$font</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#defining-keyframes-and-fonts" id="defining-keyframes-and-fonts" style="color: inherit; text-decoration: none;">
-  <h3>Defining keyframes and fonts</h3>
-</a>
-<p>Defining keyframes or font-faces is the same as defining any other style. Since they are not scoped to any particular component, they should probably only be used in global styles. To prevent name collisions, use the included <code>getId</code> utility to generate CSS-safe unique names.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">openSansFont</span><span class="hl-1"> = </span><span class="hl-3">getId</span><span class="hl-1">(</span><span class="hl-5">&#39;Open Sans&#39;</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">slideInAnimation</span><span class="hl-1"> = </span><span class="hl-3">getId</span><span class="hl-1">(</span><span class="hl-5">&#39;slideIn&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">GlobalStyle</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">global</span><span class="hl-5">`</span><br/><span class="hl-5">  @font-face {</span><br/><span class="hl-5">    font-family: </span><span class="hl-0">${</span><span class="hl-4">openSansFont</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">    src: url(&#39;/fonts/OpenSans-Regular-webfont.woff&#39;) format(&#39;woff&#39;);</span><br/><span class="hl-5">  }</span><br/><br/><span class="hl-5">  @keyframes </span><span class="hl-0">${</span><span class="hl-4">slideInAnimation</span><span class="hl-0">}</span><span class="hl-5"> {</span><br/><span class="hl-5">    from {</span><br/><span class="hl-5">      transform: translateX(0%);</span><br/><span class="hl-5">    }</span><br/><br/><span class="hl-5">    to {</span><br/><span class="hl-5">      transform: translateX(100%);</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  font-family: </span><span class="hl-0">${</span><span class="hl-4">openSansFont</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  animation-name: </span><span class="hl-0">${</span><span class="hl-4">slideInAnimation</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#theming" id="theming" style="color: inherit; text-decoration: none;">
-  <h2>Theming</h2>
-</a>
-<p>A theme factory is provided instead of a single built-in theme. This allows themes to be strongly typed without relying on Typescript declaration merging (which does not provide great type-safety).</p>
-
-<a href="#creating-a-theme" id="creating-a-theme" style="color: inherit; text-decoration: none;">
-  <h3>Creating a theme</h3>
-</a>
-<p>A theme is essentially a context which provides theme constants. The <code>createTheme</code> utility makes it easy to create that kind of context, returning a hook for theme access, and a provider for theme overriding.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> [</span><span class="hl-2">useTheme</span><span class="hl-1">, </span><span class="hl-2">ThemeProvider</span><span class="hl-1">] = </span><span class="hl-3">createTheme</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">fgColor:</span><span class="hl-1"> </span><span class="hl-5">&#39;black&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-4">bgColor</span><span class="hl-1">: </span><span class="hl-5">&#39;white&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">});</span>
-</code></pre>
-<p><strong>Note</strong>: The <code>createTheme</code> helper is only for convenience. <em>Any</em> hook could potentially be used, including theme hooks from other libraries.</p>
-
-<a href="#using-a-theme" id="using-a-theme" style="color: inherit; text-decoration: none;">
-  <h3>Using a theme</h3>
-</a>
-<p>Pass the a hook (or any function) which returns a theme value to the <code>createStyled</code> function. The theme value will then be available as the second argument passed to any styled template string functional value.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">styled</span><span class="hl-1"> = </span><span class="hl-3">createStyled</span><span class="hl-1">(</span><span class="hl-4">useTheme</span><span class="hl-1">);</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">ThemedComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">, </span><span class="hl-4">theme</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">theme</span><span class="hl-8">.</span><span class="hl-4">fgColor</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  background-color: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">, </span><span class="hl-4">theme</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">theme</span><span class="hl-8">.</span><span class="hl-4">bgColor</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#style-syntax" id="style-syntax" style="color: inherit; text-decoration: none;">
-  <h2>Style syntax</h2>
-</a>
-<p>Style syntax is CSS-like, and all CSS properties, selectors, and at-rules are supported. In addition, SCSS-like nesting is supported with parent selector references (<code>&amp;</code>).</p>
-
-<a href="#styling-self" id="styling-self" style="color: inherit; text-decoration: none;">
-  <h3>Styling self</h3>
-</a>
-<p>To apply styles directly to the HTML element or component being styled, use CSS properties at the top-level of the tagged template (no surrounding block).</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>Top-level CSS properties will be wrapped in a dynamic styled class selector</p>
-<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#styling-children" id="styling-children" style="color: inherit; text-decoration: none;">
-  <h3>Styling children</h3>
-</a>
-<p>Use CSS rule blocks to style children of the styled component.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    color: blue;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>The styled dynamic class will be automatically prepended to all selectors to make them &quot;scoped&quot;.</p>
-<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#styling-other-styled-components" id="styling-other-styled-components" style="color: inherit; text-decoration: none;">
-  <h3>Styling other styled components</h3>
-</a>
-<p>Every styled component (except global styles) can be used as a selector for that specific styled component.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponentA</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: blue;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponentB</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">StyledComponentA</span><span class="hl-0">}</span><span class="hl-5"> {</span><br/><span class="hl-5">    background-color: yellow;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>The styled component&#39;s <code>toString()</code> method returns a unique selector string (eg. <code>&quot;.tss_s7y13d&quot;</code>) which matches that specific styled component.</p>
-<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.tss_s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#nesting-rules" id="nesting-rules" style="color: inherit; text-decoration: none;">
-  <h3>Nesting rules</h3>
-</a>
-<p>Nest rule blocks to create more complex selectors.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    color: blue;</span><br/><br/><span class="hl-5">    .grandchild {</span><br/><span class="hl-5">      color: green;</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>Just like the styled dynamic class is prepended to top-level selectors, so too are parent selectors prepended to child selectors.</p>
-<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">green</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#using-parent-selector-references" id="using-parent-selector-references" style="color: inherit; text-decoration: none;">
-  <h3>Using parent selector references</h3>
-</a>
-<p>Parent selector references (<code>&amp;</code>) work the same way they do in SCSS/SASS. The one extra detail is that when a parent selector is used at the style root (not nested inside a parent block), it refers to the unique style class of the current style, which is the implicit/virtual parent block selector for the style.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  &amp;&amp; {</span><br/><span class="hl-5">    color: red;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  &amp;:hover {</span><br/><span class="hl-5">    color: blue;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  .parent &amp; {</span><br/><span class="hl-5">    color: green;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#using-at-rules" id="using-at-rules" style="color: inherit; text-decoration: none;">
-  <h3>Using at-rules</h3>
-</a>
-<p>All CSS at-rules are supported (except <code>@charset</code> which isn&#39;t allowed inside <code>&lt;style&gt;</code> elements).</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  @media screen and (min-width: 900px) {</span><br/><span class="hl-5">    color: red;</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">  .child {</span><br/><span class="hl-5">    @media screen and (min-width: 600px) {</span><br/><span class="hl-5">      .grandchild {</span><br/><span class="hl-5">        color: blue;</span><br/><span class="hl-5">        .adopted &amp; {</span><br/><span class="hl-5">          color: green;</span><br/><span class="hl-5">        }</span><br/><span class="hl-5">      }</span><br/><span class="hl-5">    }</span><br/><span class="hl-5">  }</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>At-rules will be hoisted as necessary, and parent selectors will be handled the same way they would be without the intervening at-rule.</p>
-<pre><code class="language-css"><span class="hl-6">@media</span><span class="hl-1"> </span><span class="hl-11">screen</span><span class="hl-1"> and (</span><span class="hl-10">min-width</span><span class="hl-1">: </span><span class="hl-12">900px</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><span class="hl-6">@media</span><span class="hl-1"> </span><span class="hl-11">screen</span><span class="hl-1"> and (</span><span class="hl-10">min-width</span><span class="hl-1">: </span><span class="hl-12">600px</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">blue</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-9">.adopted</span><span class="hl-1"> </span><span class="hl-9">._s7y13d</span><span class="hl-1"> </span><span class="hl-9">.child</span><span class="hl-1"> </span><span class="hl-9">.grandchild</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-10">color</span><span class="hl-1">: </span><span class="hl-11">green</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#using-empty-values" id="using-empty-values" style="color: inherit; text-decoration: none;">
-  <h3>Using empty values</h3>
-</a>
-<p>If a CSS property value is &quot;empty&quot; (empty string, <code>false</code>, <code>null</code> or <code>undefined</code>), then the whole property will be omitted from the style.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: </span><span class="hl-0">${</span><span class="hl-0">null</span><span class="hl-0">}</span><span class="hl-5">;</span><br/><span class="hl-5">  background-color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-<p>The color property is not included because it has no value.</p>
-<pre><code class="language-css"><span class="hl-9">._s7y13d</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">background-color</span><span class="hl-1">: </span><span class="hl-11">red</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#commenting" id="commenting" style="color: inherit; text-decoration: none;">
-  <h3>Commenting</h3>
-</a>
-<p>Styles can contain both block (<code>/* */</code>) and line comments (<code>//</code>). Comments are never included in rendered stylesheets.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  // This is a comment.</span><br/><span class="hl-5">  /* And so...</span><br/><span class="hl-5">     ...is this. */</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#style-mixins-helpers" id="style-mixins-helpers" style="color: inherit; text-decoration: none;">
-  <h2>Style mixins (helpers)</h2>
-</a>
-<p>The <code>styled.mixin</code> tagged template utility returns a mixin (AKA: helper) function. When the returned function is called, it returns a style string with all values interpolated.</p>
-
-<a href="#creating-simple-mixins" id="creating-simple-mixins" style="color: inherit; text-decoration: none;">
-  <h3>Creating simple mixins</h3>
-</a>
-<p>Mixins do not accept any parameters by default.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">fontMixin</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">mixin</span><span class="hl-5">`</span><br/><span class="hl-5">  font-family: Arial, sans-serif;</span><br/><span class="hl-5">  font-weight: 400;</span><br/><span class="hl-5">  font-size: 1rem;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">fontMixin</span><span class="hl-0">}</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#creating-parametric-mixins" id="creating-parametric-mixins" style="color: inherit; text-decoration: none;">
-  <h3>Creating parametric mixins</h3>
-</a>
-<p>Helpers which accept parameters can be created by setting the generic parameter of the <code>styled.mixin</code> template string.</p>
-<pre><code class="language-tsx"><span class="hl-0">interface</span><span class="hl-1"> </span><span class="hl-7">FontMixinProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">scale</span><span class="hl-1">?: </span><span class="hl-7">number</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">fontMixin</span><span class="hl-1"> = </span><span class="hl-4">styled</span><span class="hl-5">.</span><span class="hl-3">mixin</span><span class="hl-5">&lt;</span><span class="hl-7">FontMixinProps</span><span class="hl-5">&gt;`</span><br/><span class="hl-5">  font-family: Arial, sans-serif;</span><br/><span class="hl-5">  font-weight: 400;</span><br/><span class="hl-5">  font-size: </span><span class="hl-0">${</span><span class="hl-8">(</span><span class="hl-4">props</span><span class="hl-8">) </span><span class="hl-0">=&gt;</span><span class="hl-8"> </span><span class="hl-4">props</span><span class="hl-8">.</span><span class="hl-4">scale</span><span class="hl-8"> </span><span class="hl-1">||</span><span class="hl-8"> </span><span class="hl-12">1</span><span class="hl-0">}</span><span class="hl-5">rem;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">StyledComponent</span><span class="hl-1"> = </span><span class="hl-3">styled</span><span class="hl-1">(</span><span class="hl-5">&#39;div&#39;</span><span class="hl-1">)</span><span class="hl-5">`</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-3">fontMixin</span><span class="hl-8">({ </span><span class="hl-4">scale:</span><span class="hl-8"> </span><span class="hl-12">2</span><span class="hl-8"> })</span><span class="hl-0">}</span><br/><span class="hl-5">  color: red;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#server-side-rendering-ssr" id="server-side-rendering-ssr" style="color: inherit; text-decoration: none;">
-  <h2>Server Side Rendering (SSR)</h2>
-</a>
-<p>During SSR, there is no DOM and therefore no <code>document</code> global. TSStyled detects this and uses a very minimal &quot;virtual&quot; DOM behind the scenes. So, after rendering the document body, use the <code>renderStylesToString</code> utility to get all of the <code>&lt;style&gt;</code> elements (generated by TSStyled components) as an HTML string.</p>
-<pre><code class="language-tsx"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">appHtml</span><span class="hl-1"> = </span><span class="hl-3">renderToString</span><span class="hl-1">(</span><span class="hl-13">&lt;</span><span class="hl-7">App</span><span class="hl-1"> </span><span class="hl-13">/&gt;</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">stylesHtml</span><span class="hl-1"> = </span><span class="hl-3">renderStylesToString</span><span class="hl-1">();</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">html</span><span class="hl-1"> = </span><span class="hl-5">`</span><br/><span class="hl-5">&lt;!doctype HTML&gt;</span><br/><span class="hl-5">&lt;html&gt;</span><br/><span class="hl-5">&lt;head&gt;</span><br/><span class="hl-5">  </span><span class="hl-0">${</span><span class="hl-4">stylesHtml</span><span class="hl-0">}</span><br/><span class="hl-5">&lt;/head&gt;</span><br/><span class="hl-5">&lt;body&gt;</span><br/><span class="hl-5">  &lt;div id=&quot;root&quot;&gt;</span><span class="hl-0">${</span><span class="hl-4">appHtml</span><span class="hl-0">}</span><span class="hl-5">&lt;/div&gt;</span><br/><span class="hl-5">&lt;/body&gt;</span><br/><span class="hl-5">&lt;/html&gt;</span><br/><span class="hl-5">`</span><span class="hl-1">;</span>
-</code></pre>
-
-<a href="#testing" id="testing" style="color: inherit; text-decoration: none;">
-  <h2>Testing</h2>
-</a>
-<p>During testing, there may be a DOM (eg. jsdom) and a <code>document</code> global. However, the <code>NODE_ENV</code> environment variable should also be set to <code>test</code> (Jest sets this automatically). If it is, the SSR implementation is used. So, you can use the same <code>renderStylesToString</code> utility to test (eg. Jest snapshots) your styles.</p>
-<pre><code class="language-tsx"><span class="hl-3">expect</span><span class="hl-1">(</span><span class="hl-3">renderStylesToString</span><span class="hl-1">()).</span><span class="hl-3">toMatchSnapshot</span><span class="hl-1">();</span>
-</code></pre>
-</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Styled.html" class="tsd-kind-icon">Styled</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleMixin" class="tsd-kind-icon">Style<wbr/>Mixin</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleTaggedTemplateFunction" class="tsd-kind-icon">Style<wbr/>Tagged<wbr/>Template<wbr/>Function</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleTemplateValues" class="tsd-kind-icon">Style<wbr/>Template<wbr/>Values</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#createStyled" class="tsd-kind-icon">create<wbr/>Styled</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#createTheme" class="tsd-kind-icon">create<wbr/>Theme</a></li><li class="tsd-kind-function"><a href="modules.html#getId" class="tsd-kind-icon">get<wbr/>Id</a></li><li class="tsd-kind-function"><a href="modules.html#renderStylesToString" class="tsd-kind-icon">render<wbr/>Styles<wbr/>To<wbr/>String</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Styled.html" class="tsd-kind-icon">Styled</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleMixin" class="tsd-kind-icon">Style<wbr/>Mixin</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleTaggedTemplateFunction" class="tsd-kind-icon">Style<wbr/>Tagged<wbr/>Template<wbr/>Function</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#StyleTemplateValues" class="tsd-kind-icon">Style<wbr/>Template<wbr/>Values</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#createReactTheme" class="tsd-kind-icon">create<wbr/>React<wbr/>Theme</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#createStyled" class="tsd-kind-icon">create<wbr/>Styled</a></li><li class="tsd-kind-function"><a href="modules.html#getId" class="tsd-kind-icon">get<wbr/>Id</a></li><li class="tsd-kind-function"><a href="modules.html#renderStylesToString" class="tsd-kind-icon">render<wbr/>Styles<wbr/>To<wbr/>String</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>

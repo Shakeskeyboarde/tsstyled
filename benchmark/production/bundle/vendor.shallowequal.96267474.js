@@ -1,0 +1,2 @@
+(self.webpackChunktsstyled=self.webpackChunktsstyled||[]).push([[245],{2807:e=>{e.exports=function(e,t,r,n){var o=r?r.call(n,e,t):void 0;if(void 0!==o)return!!o;if(e===t)return!0;if("object"!=typeof e||!e||"object"!=typeof t||!t)return!1;var f=Object.keys(e),i=Object.keys(t);if(f.length!==i.length)return!1;for(var l=Object.prototype.hasOwnProperty.bind(t),s=0;s<f.length;s++){var u=f[s];if(!l(u))return!1;var a=e[u],c=t[u];if(!1===(o=r?r.call(n,a,c,u):void 0)||void 0===o&&a!==c)return!1}return!0}}}]);
+//# sourceMappingURL=vendor.shallowequal.96267474.js.map
